@@ -135,7 +135,7 @@ $(function () {
 					// Keep track of old indexes for referral when item is selected
                     var oldIndexArray = [];
 					// Go through returned data array
-                    for (var i = 0; i < iter; i++) {
+                    for (var i = 0; i < data.length; i++) {
 						if(data[i] === undefined) continue;
 						
 						// Stores items for each row
@@ -175,6 +175,9 @@ $(function () {
                             oldIndexArray.push(i);
                         }
                     }
+					
+					dataArray.splice(iter);
+					oldIndexArray.splice(iter);
 
                     // Render the table
                     var table = Mustache.render(template, {
