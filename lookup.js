@@ -41,6 +41,14 @@ $(function () {
 
             // Utility object
             var util = {
+				// Check if an item is in an array
+				inArray: function(array, item) {
+					for(var i = 0; i < array.length; i++) {
+						if(array[i] === item) return true;
+					}
+					
+					return false;
+				},
 				// Text to be displayed when there are no results found
 				noResults: mainElement.data('noresults') === undefined ? 'No results found' : mainElement.data('noresults'),
 				// Handle closing lookup
