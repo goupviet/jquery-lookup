@@ -184,48 +184,4 @@ $(function () {
             });
         });
     };
-
-
-    // Here is the data...
-
-    var data = [
-      { "ID": 0, "First": "Gudjon", "Last": "Jonsson", "Age": 28 },
-      { "ID": 1, "First": "Lovísa", "Last": "Júlíusdóttir", "Age": 30 },
-      { "ID": 2, "First": "Kjartan", "Last": "Hjartarson", "Age": 25 },
-      { "ID": 3, "First": "Guðmundur", "Last": "Ingvarsson", "Age": 31 },
-      { "ID": 4, "First": "Vignir", "Last": "Sveinsson", "Age": 40 },
-      { "ID": 5, "First": "Hafþór", "Last": "Húni", "Age": 33 }
-    ];
-
-    // Here is the magic...
-
-    // Callback to handle the selected row
-    var selectedCallback = function (obj) {
-        $(obj.element).val(obj.row.First);
-    };
-
-    var options = {
-        hideCol: [0],
-        minlength: 1,
-        rows: 10,
-        begin: false,
-        casesens: false
-    };
-
-    // This will be a AJAX call to webserver
-    function dataLoader() {
-        var timer;
-        var dfd = new $.Deferred();
-        clearTimeout(timer);
-        timer = setTimeout(function () {
-            dfd.resolve(data);
-        }, 1000);
-
-        return dfd;
-    }
-
-    // Run the function
-    $('#test').lookup(["ID", "Fornafn", "Eftirnafn", "Aldur"], dataLoader, options, selectedCallback);
-    $('#test2').lookup(["ID", "Fornafn", "Eftirnafn", "Aldur"], dataLoader, options, selectedCallback);
-    $('#test3').lookup(["ID", "Fornafn", "Eftirnafn", "Aldur"], dataLoader, options, selectedCallback);
 });
