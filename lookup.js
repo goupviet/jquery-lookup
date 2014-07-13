@@ -7,6 +7,9 @@ $(function () {
 
             // Default options
             var defaultOpts = {
+				// Do sorting (order and column (index))
+				// Disable: false
+				sort: {"order": "asc", "col": 0},
 				// Hide these columns (index)
                 hideCol: [],
 				// Don't start search until minlength reached
@@ -52,6 +55,18 @@ $(function () {
                 destroyCache: function () {
                     cache = [];
                 },
+				// Handles sorting by a property
+				dynamicSort: function (property) {
+					var sortOrder = 1;
+					if(property[0] === "-") {
+						sortOrder = -1;
+						property = property.substr(1);
+					}
+					return function (a,b) {
+						var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+						return result * sortOrder;
+					}
+				},
 				// Handles highlighting words in a line
                 highlightWords: function (line, word) {
                     var pattern = '(' + word + ')';
@@ -98,6 +113,21 @@ $(function () {
 					var iter = data.length;
 					if (options.rows !== 0) {
 						iter = options.rows;
+					}
+					
+					// Sort data array (if enabled)				
+					if(options.sort !== false) {
+						// If first element is an object, expect all elements to be
+						if(typeof(data[0]) === 'object') {
+							data.sort(util.dynamicSort(Object.keys(data[0])[options.sort.col]));
+						} else {
+							data.sort();
+						}
+						
+						// If not ascending, then it must be descending
+						if(options.sort.order !== 'asc' && options.sort.order !== 'ascending') {
+							data.reverse();
+						}
 					}
 
                     // New data array
