@@ -148,16 +148,20 @@ $(function () {
                     }
 
                     // Hover over a row
-                    wrapper.parent('div').find('table tbody tr').hover(function () {
-                        var selfRow = $(this);
-                        selfRow.css('cursor', 'pointer');
-                        selfRow.addClass('hover');
-                    },
-                    function () {
-                        var selfRow = $(this);
-                        selfRow.css('cursor', 'initial');
-                        selfRow.removeClass('hover');
-                    });
+                    wrapper.parent('div').find('table tbody tr').hover(
+						// Hover active
+						function () {
+							var selfRow = $(this);
+							selfRow.css('cursor', 'pointer');
+							selfRow.addClass('hover');
+						},
+						// Hover inactive
+						function () {
+							var selfRow = $(this);
+							selfRow.css('cursor', 'initial');
+							selfRow.removeClass('hover');
+						}
+					);
 
                     // Click on a row
                     wrapper.parent('div').find('table tbody tr').click(function () {
@@ -195,6 +199,7 @@ $(function () {
                 }
             });
 
+			// Close look up when mouse leaves the container
             wrapper.parent('div').mouseleave(function () {
                 util.closeLookup();
                 isOpen = false;
