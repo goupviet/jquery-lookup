@@ -1,5 +1,6 @@
 $(function () {
     $.fn.lookup = function (col, promise, opts, callback) {
+		// Do this for each lookup element
         return this.each(function () {
             // Input box element
             var mainElement = $(this);
@@ -18,6 +19,7 @@ $(function () {
                 casesens: false
             };
 
+			// Extend options
             var options = $.extend({}, defaultOpts, opts);
 			
 			// Data cache
@@ -36,16 +38,21 @@ $(function () {
 
             // Utility object
             var util = {
+				// Text to be displayed when there are no results found
 				noResults: mainElement.data('noresults') === undefined ? 'No results found' : mainElement.data('noresults'),
+				// Handle closing lookup
                 closeLookup: function () {
                     mainElement.next('div').slideUp('fast');
                 },
+				// Handles caching data
                 cacheData: function (d) {
                     cache = d;
                 },
+				// Handles destroying cache
                 destroyCache: function () {
                     cache = [];
                 },
+				// Handles highlighting words in a line
                 highlightWords: function (line, word) {
                     var pattern = '(' + word + ')';
                     // Highlight only beginning
@@ -64,6 +71,7 @@ $(function () {
 
                     return newline;
                 },
+				// Checks if a line contains a word
                 findWord: function (line, word) {
                     if (options.begin) {
                         line = line.toString().substring(0, word.length);
@@ -77,10 +85,13 @@ $(function () {
                         return line.toString().toLowerCase().indexOf(word.toLowerCase()) !== -1;
                     }
                 },
+				// Handles loading data and displaying in the DOM
                 loadData: function (data) {
 					var loadContext = this;
 				
+					// Remove element from DOM
                     mainElement.next('div').remove();
+					// Remove loading state
                     mainElement.removeClass('loading');
 					
 					// How many rows we want to display
@@ -89,35 +100,48 @@ $(function () {
 						iter = options.rows;
 					}
 
-                    // Filtering
+                    // New data array
                     var dataArray = [];
+					// Keep track of old indexes for referral when item is selected
                     var oldIndexArray = [];
+					// Go through returned data array
                     for (var i = 0; i < iter; i++) {
 						if(data[i] === undefined) continue;
 						
+						// Stores items for each row
                         var tmp = [];
                         var addRow = false;
+						
 						// If the item is an object, we have to loop through each property
 						if(typeof(data[i]) === 'object') {
+							// Go through each property in object
 							for (var prop in data[i]) {
+								// Check if the value contains the input text
 								if (this.findWord(data[i][prop], mainElement.val())) {
 									addRow = true;
 								}
-
+								
+								// Highlight words in input text
 								var tmpText = this.highlightWords(data[i][prop], mainElement.val());
 								tmp.push(tmpText);
 							}
+						// The item is not an object
 						} else {
+							// Check if the value contains the input text
 							if (this.findWord(data[i], mainElement.val())) {
 								addRow = true;
 							}
 							
+							// Highlight words in input text
 							var tmpText = this.highlightWords(data[i], mainElement.val());					
 							tmp.push(tmpText);
 						}
 
+						// If all conditions are met for adding the row to the new data array
                         if (addRow) {
                             dataArray.push(tmp);
+							
+							// Keep track of indexes in original data array
                             oldIndexArray.push(i);
                         }
                     }
@@ -128,17 +152,21 @@ $(function () {
                         "rows": dataArray
                     });
 
+					// Create a new div containing our table
                     var newDiv = $('<div style="position: absolute; z-index: 1; width: 100%"/>');
                     newDiv.append(table);
                     newDiv.appendTo(wrapper.parent('div')).hide();
 
-                    if (!isOpen) {
-                        newDiv.slideDown('fast');
-                    }
-                    else {
+					// If lookup is open, we don't want animation
+                    if (isOpen) {
                         newDiv.show();
                     }
+					// Lookup is not open, animate!
+                    else {
+                        newDiv.slideDown('fast');
+                    }
 
+					// Mark the lookup as open
                     isOpen = true;
 
                     // Hide specific columns
@@ -163,10 +191,13 @@ $(function () {
 						}
 					);
 
-                    // Click on a row
+                    // Event handler for click on a row in the lookup
                     wrapper.parent('div').find('table tbody tr').click(function () {
                         var selfRow = $(this);
+						// Callback with original index, the input element and the selected row
                         callback({ "index": oldIndexArray[selfRow.index()], "element": mainElement, "row": data[oldIndexArray[selfRow.index()]] });
+						
+						// Close lookup
                         loadContext.closeLookup();
                         isOpen = false;
                     });
@@ -182,16 +213,20 @@ $(function () {
 
                 // Check if minimum length is reached
                 if (mainElement.val().length >= options.minlength) {
+					// Add loading state
                     mainElement.addClass('loading');
-                    // Check cache
+                    // If there is no data in cache
                     if (cache.length === 0) {
+						// Async data loader that loads data on callback (e.g. with AJAX)
                         promise().then(function (data) {
                             cache = data;
                             util.loadData(cache);
                         });
+					// Data is in cache, load it
                     } else {
                         util.loadData(cache);
                     }
+				// Minimum input length not reached
                 } else {
                     util.closeLookup();
                     util.destroyCache();
