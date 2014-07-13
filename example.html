@@ -8,9 +8,11 @@
 	<script type="text/javascript" src="lookup.js"></script>
 </head>
 <body>
-	<input type="text" id="lookup1" class="lookup" placeholder="Enter something" data-noresults="Nothing found!" />
-	<input type="text" id="lookup2" class="lookup" placeholder="Enter something" />
-	<textarea id="lookup3" class="lookup" placeholder="Enter something"></textarea>
+	<div style="display: inline-block; margin: 100px">
+		<input type="text" id="lookup1" class="lookup" placeholder="Enter something" data-noresults="Nothing found!" />
+		<br /><br />
+		<textarea id="lookup2" class="lookup" placeholder="Enter something"></textarea>
+	</div>
 	<script type="text/javascript">
 	$(function() {
 		// Some example data
@@ -70,7 +72,6 @@
 		// Run the function on these elements
 		$('#lookup1').lookup(["ID", "First name", "Last name", "Age"], dataLoader, options, selectedCallback);
 		$('#lookup2').lookup(["ID", "First name", "Last name", "Age"], dataLoader, options, selectedCallback);
-		$('#lookup3').lookup(["ID", "First name", "Last name", "Age"], dataLoader, options, selectedCallback);
 	});
 	</script>
 </body>
