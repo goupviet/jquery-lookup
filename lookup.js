@@ -153,20 +153,25 @@ $(function () {
 						// If the item is an object, we have to loop through each property
 						if(typeof(data[i]) === 'object') {
 							// Go through each property in object
-							for (var prop in data[i]) {
+							var j = 0;
+							for (var prop in data[i]) {							
 								// Check if the value contains the input text
-								if (this.findWord(data[i][prop], mainElement.val())) {
+								// And don't add values that are found in columns that are hidden
+								if (this.findWord(data[i][prop], mainElement.val()) && !util.inArray(options.hideCol, j)) {
 									addRow = true;
 								}
 								
 								// Highlight words in input text
 								var tmpText = this.highlightWords(data[i][prop], mainElement.val());
 								tmp.push(tmpText);
+								
+								j++;
 							}
 						// The item is not an object
 						} else {
 							// Check if the value contains the input text
-							if (this.findWord(data[i], mainElement.val())) {
+							// And don't add values that are found in columns that are hidden
+							if (this.findWord(data[i], mainElement.val()) && !util.inArray(options.hideCol, i)) {
 								addRow = true;
 							}
 							
