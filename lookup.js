@@ -2,7 +2,7 @@ $(function () {
     $.fn.lookup = function (col, promise, opts, callback) {
         return this.each(function () {
             // Input box element
-            var mainContext = $(this);
+            var mainElement = $(this);
 
             // Default options
             var defaultOpts = {
@@ -26,7 +26,7 @@ $(function () {
             // Container
             var container = $('<div style="display: inline-block; position: relative; width: inherit"/>');
 			// Wrapper around input box
-            var wrapper = mainContext.wrap(container);
+            var wrapper = mainElement.wrap(container);
 
             // Lookup table template
             var template = '<table style="border-radius: 5px; width: inherit"><thead><tr>{{#col}}<td>{{.}}</td>{{/col}}</tr></thead><tbody>{{#rows}}<tr>{{#.}}<td>{{{.}}}</td>{{/.}}</tr>{{/rows}}</tbody></table>';
@@ -36,9 +36,9 @@ $(function () {
 
             // Utility object
             var util = {
-				noResults: mainContext.data('noresults') === undefined ? 'No results found' : mainContext.data('noresults'),
+				noResults: mainElement.data('noresults') === undefined ? 'No results found' : mainElement.data('noresults'),
                 closeLookup: function () {
-                    mainContext.next('div').slideUp('fast');
+                    mainElement.next('div').slideUp('fast');
                 },
                 cacheData: function (d) {
                     cache = d;
@@ -80,8 +80,8 @@ $(function () {
                 loadData: function (data) {
 					var loadContext = this;
 				
-                    mainContext.next('div').remove();
-                    mainContext.removeClass('loading');
+                    mainElement.next('div').remove();
+                    mainElement.removeClass('loading');
 					
 					// How many rows we want to display
 					var iter = data.length;
@@ -96,11 +96,11 @@ $(function () {
                         var tmp = [];
                         var addRow = false;
                         for (var prop in data[i]) {
-                            if (this.findWord(data[i][prop], mainContext.val())) {
+                            if (this.findWord(data[i][prop], mainElement.val())) {
                                 addRow = true;
                             }
 
-                            var tmpText = this.highlightWords(data[i][prop], mainContext.val());
+                            var tmpText = this.highlightWords(data[i][prop], mainElement.val());
                             tmp.push(tmpText);
                         }
 
@@ -150,7 +150,7 @@ $(function () {
                     // Click on a row
                     wrapper.parent('div').find('table tbody tr').click(function () {
                         var selfRow = $(this);
-                        callback({ "index": oldIndexArray[selfRow.index()], "element": mainContext, "row": data[oldIndexArray[selfRow.index()]] });
+                        callback({ "index": oldIndexArray[selfRow.index()], "element": mainElement, "row": data[oldIndexArray[selfRow.index()]] });
                         loadContext.closeLookup();
                         isOpen = false;
                     });
@@ -158,15 +158,15 @@ $(function () {
             };
 
             // Event handler on input box for input and click
-            mainContext.on('input click', function (e) {
+            mainElement.on('input click', function (e) {
                 // If element is clicked and the minlength has been reached, we load the cache
-                if (e.type === 'click' && mainContext.val().length > options.minlength) {
+                if (e.type === 'click' && mainElement.val().length > options.minlength) {
                     util.loadData(cache);
                 }
 
                 // Check if minimum length is reached
-                if (mainContext.val().length >= options.minlength) {
-                    mainContext.addClass('loading');
+                if (mainElement.val().length >= options.minlength) {
+                    mainElement.addClass('loading');
                     // Check cache
                     if (cache.length === 0) {
                         promise().then(function (data) {
