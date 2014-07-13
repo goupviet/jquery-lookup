@@ -181,7 +181,7 @@ $(function () {
 
                     // Render the table
                     var table = Mustache.render(template, {
-                        "col": dataArray.length === 0 ? ['', util.noResults] : col,
+                        "col": dataArray.length === 0 ? [util.noResults] : col,
                         "rows": dataArray
                     });
 
@@ -204,6 +204,9 @@ $(function () {
 
                     // Hide specific columns
                     for (var j = 0; j < options.hideCol.length; j++) {
+						// Don't hide first column if no results are found
+						if(j == 0 && dataArray.length == 0) continue;
+						
                         var idx = (options.hideCol[j] + 1);
                         wrapper.parent('div').find('td:nth-of-type(' + idx + '),th:nth-of-type(' + idx + ')').css('display', 'none');
                     }
