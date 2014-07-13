@@ -17,13 +17,7 @@ $(function () {
             var options = $.extend({}, defaultOpts, opts);
 
             var cache = [];
-
-            // How many rows we want to display
-            var iter = data.length;
-            if (options.rows !== 0) {
-                iter = options.rows;
-            }
-
+			
             // Container
             var container = $('<div style="display: inline-block; position: relative"/>');
 			// Wrapper around input box
@@ -83,6 +77,12 @@ $(function () {
 				
                     mainContext.next('div').remove();
                     mainContext.removeClass('loading');
+					
+					// How many rows we want to display
+					var iter = data.length;
+					if (options.rows !== 0) {
+						iter = options.rows;
+					}
 
                     // Filtering
                     var dataArray = [];
@@ -156,7 +156,7 @@ $(function () {
             mainContext.on('input click', function (e) {
                 // If element is clicked and the minlength has been reached, we load the cache
                 if (e.type === 'click' && mainContext.val().length > options.minlength) {
-                    util.loadData(data);
+                    util.loadData(cache);
                 }
 
                 // Check if minimum length is reached
@@ -169,7 +169,7 @@ $(function () {
                             util.loadData(cache);
                         });
                     } else {
-                        util.loadData(data);
+                        util.loadData(cache);
                     }
                 } else {
                     util.closeLookup();
