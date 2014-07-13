@@ -93,18 +93,30 @@ $(function () {
                     var dataArray = [];
                     var oldIndexArray = [];
                     for (var i = 0; i < iter; i++) {
+						if(data[i] === undefined) continue;
+						
                         var tmp = [];
                         var addRow = false;
-                        for (var prop in data[i]) {
-                            if (this.findWord(data[i][prop], mainElement.val())) {
-                                addRow = true;
-                            }
+						// If the item is an object, we have to loop through each property
+						if(typeof(data[i]) === 'object') {
+							for (var prop in data[i]) {
+								if (this.findWord(data[i][prop], mainElement.val())) {
+									addRow = true;
+								}
 
-                            var tmpText = this.highlightWords(data[i][prop], mainElement.val());
-                            tmp.push(tmpText);
-                        }
+								var tmpText = this.highlightWords(data[i][prop], mainElement.val());
+								tmp.push(tmpText);
+							}
+						} else {
+							if (this.findWord(data[i], mainElement.val())) {
+								addRow = true;
+							}
+							
+							var tmpText = this.highlightWords(data[i], mainElement.val());					
+							tmp.push(tmpText);
+						}
 
-                        if (data[i] !== undefined && addRow) {
+                        if (addRow) {
                             dataArray.push(tmp);
                             oldIndexArray.push(i);
                         }
