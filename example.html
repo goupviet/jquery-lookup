@@ -1,78 +1,78 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<link rel="stylesheet" href="bootstrap.css" />
-	<link rel="stylesheet" href="lookup.css" />
-	<script type="text/javascript" src="jquery-1.10.2.js"></script>
-	<script type="text/javascript" src="mustache.js"></script>
-	<script type="text/javascript" src="lookup.js"></script>
+    <link rel="stylesheet" href="bootstrap.css" />
+    <link rel="stylesheet" href="lookup.css" />
+    <script type="text/javascript" src="jquery-1.10.2.js"></script>
+    <script type="text/javascript" src="mustache.js"></script>
+    <script type="text/javascript" src="lookup.js"></script>
 </head>
 <body>
-	<div style="display: inline-block; margin: 100px">
-		<input type="text" id="lookup1" class="lookup" placeholder="Enter something" data-noresults="Nothing found!" />
-		<br /><br />
-		<textarea id="lookup2" class="lookup" placeholder="Enter something"></textarea>
-	</div>
-	<script type="text/javascript">
-	$(function() {
-		// Some example data
-		var data = [
-		  { "ID": 0, "First": "Ron", "Last": "Carpenter", "Age": 28 },
-		  { "ID": 1, "First": "Elroy", "Last": "Babcoke", "Age": 30 },
-		  { "ID": 2, "First": "Jake", "Last": "Bolton", "Age": 25 },
-		  { "ID": 3, "First": "Ainsley", "Last": "Beckett", "Age": 31 },
-		  { "ID": 4, "First": "Wyatt", "Last": "Goode", "Age": 40 },
-		  { "ID": 5, "First": "Shayne", "Last": "Hunt", "Age": 33 },
-		  { "ID": 6, "First": "Barnabas", "Last": "Hayward", "Age": 32 },
-		  { "ID": 7, "First": "Vaughn", "Last": "Deering", "Age": 24 },
-		  { "ID": 8, "First": "Royce", "Last": "Granger", "Age": 27 },
-		  { "ID": 9, "First": "Dene", "Last": "Keighley", "Age": 21 },
-		  { "ID": 10, "First": "Ilbert", "Last": "Queshire", "Age": 24 },
-		  { "ID": 11, "First": "Leith", "Last": "Aylmer", "Age": 22 },
-		  { "ID": 12, "First": "Abe", "Last": "Harlow", "Age": 20 },
-		  { "ID": 13, "First": "Ansel", "Last": "Wilkinson", "Age": 17 }
-		];
+    <div style="display: inline-block; margin: 100px">
+        <input type="text" id="lookup1" class="lookup" placeholder="Enter something" data-noresults="Nothing found!" />
+        <br /><br />
+        <textarea id="lookup2" class="lookup" placeholder="Enter something"></textarea>
+    </div>
+    <script type="text/javascript">
+    $(function() {
+        // Some example data
+        var data = [
+          { "ID": 0, "First": "Ron", "Last": "Carpenter", "Age": 28 },
+          { "ID": 1, "First": "Elroy", "Last": "Babcoke", "Age": 30 },
+          { "ID": 2, "First": "Jake", "Last": "Bolton", "Age": 25 },
+          { "ID": 3, "First": "Ainsley", "Last": "Beckett", "Age": 31 },
+          { "ID": 4, "First": "Wyatt", "Last": "Goode", "Age": 40 },
+          { "ID": 5, "First": "Shayne", "Last": "Hunt", "Age": 33 },
+          { "ID": 6, "First": "Barnabas", "Last": "Hayward", "Age": 32 },
+          { "ID": 7, "First": "Vaughn", "Last": "Deering", "Age": 24 },
+          { "ID": 8, "First": "Royce", "Last": "Granger", "Age": 27 },
+          { "ID": 9, "First": "Dene", "Last": "Keighley", "Age": 21 },
+          { "ID": 10, "First": "Ilbert", "Last": "Queshire", "Age": 24 },
+          { "ID": 11, "First": "Leith", "Last": "Aylmer", "Age": 22 },
+          { "ID": 12, "First": "Abe", "Last": "Harlow", "Age": 20 },
+          { "ID": 13, "First": "Ansel", "Last": "Wilkinson", "Age": 17 }
+        ];
 
-		// Callback to handle the selected row
-		var selectedCallback = function (obj) {
-			$(obj.element).val(obj.row.First);
-		};
+        // Callback to handle the selected row
+        var selectedCallback = function (obj) {
+            $(obj.element).val(obj.row.First);
+        };
 
-		// Set options
-		var options = {
-			// Do sorting (order and column (index))
-			// Hidden columns are included
-			// Disable: false
-			sort: {"order": "asc", "col": 1},
-			// Hide first column
-			hideCol: [0],
-			// Must enter at least 1 character
-			minlength: 1,
-			// How many rows to display
-			rows: 10,
-			// Only search and highlight beginning of words
-			begin: false,
-			// Case sensitive search and highlight
-			casesens: false
-		};
+        // Set options
+        var options = {
+            // Do sorting (order and column (index))
+            // Hidden columns are included
+            // Disable: false
+            sort: {"order": "asc", "col": 1},
+            // Hide first column
+            hideCol: [0],
+            // Must enter at least 1 character
+            minlength: 1,
+            // How many rows to display
+            rows: 10,
+            // Only search and highlight beginning of words
+            begin: false,
+            // Case sensitive search and highlight
+            casesens: false
+        };
 
-		// Async data loder that handles returning data with a promise
-		// For $.ajax use: return $.ajax({...});
-		function dataLoader() {
-			var timer;
-			var dfd = new $.Deferred();
-			clearTimeout(timer);
-			timer = setTimeout(function () {
-				dfd.resolve(data);
-			}, 1000);
+        // Async data loder that handles returning data with a promise
+        // For $.ajax use: return $.ajax({...});
+        function dataLoader() {
+            var timer;
+            var dfd = new $.Deferred();
+            clearTimeout(timer);
+            timer = setTimeout(function () {
+                dfd.resolve(data);
+            }, 1000);
 
-			return dfd;
-		}
+            return dfd;
+        }
 
-		// Run the function on these elements
-		$('#lookup1').lookup(["ID", "First name", "Last name", "Age"], dataLoader, options, selectedCallback);
-		$('#lookup2').lookup(["ID", "First name", "Last name", "Age"], dataLoader, options, selectedCallback);
-	});
-	</script>
+        // Run the function on these elements
+        $('#lookup1').lookup(["ID", "First name", "Last name", "Age"], dataLoader, options, selectedCallback);
+        $('#lookup2').lookup(["ID", "First name", "Last name", "Age"], dataLoader, options, selectedCallback);
+    });
+    </script>
 </body>
 </html>
