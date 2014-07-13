@@ -7,37 +7,37 @@ body {
   line-height: normal;
 }
 
-[id^="test"] + div table {
+.lookup + div table {
   background-color: #fcfdfd;
   font-size: 11px;
   box-shadow: 2px 2px 8px #ccc;
   border: 1px solid #a6c9e2;
 }
 
-[id^="test"] + div table td {
+.lookup + div table td {
   padding: 5px;
 }
 
-[id^="test"] + div thead tr {
+.lookup + div thead tr {
   font-weight: bold;
 }
 
-[id^="test"] + div table thead tr td {
+.lookup + div table thead tr td {
   border-bottom: 1px solid #a6c9e2;
 }
 
-[id^="test"].loading {
+.lookup.loading {
   background-image: url(https://www.reading-busesshop.co.uk/ssp/images/loading-2.gif);
   background-size: 20px 20px;
   background-position: 195px 4px;
   background-repeat: no-repeat;
 }
 
-[id^="test"] + div .hover {
+.lookup + div .hover {
   background-color: #d0f1ff;
 }
 
-[id^="test"] + div .highlight {
+.lookup + div .highlight {
   font-weight: bold;
   text-decoration: underline;
 }

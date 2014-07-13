@@ -1,21 +1,26 @@
 $(function () {
-    // Here is the jQuery function
     $.fn.lookup = function (col, promise, opts, callback) {
         return this.each(function () {
             // Input box element
             var mainContext = $(this);
 
-            // Options
+            // Default options
             var defaultOpts = {
-                hideCol: [], // Hide column (index)
-                minlength: 3, // Don't start search until minlength reached
-                rows: 10, // Rows displayed
-                begin: false, // Only search/highlight beginning of words
-                casesens: false // Case sensitive search/highlight
+				// Hide these columns (index)
+                hideCol: [],
+				// Don't start search until minlength reached
+                minlength: 3,
+				// How many rows to display
+                rows: 10,
+				// Only search and highlight beginning of words
+                begin: false,
+				// Case sensitive search and highlight
+                casesens: false
             };
 
             var options = $.extend({}, defaultOpts, opts);
-
+			
+			// Data cache
             var cache = [];
 			
             // Container

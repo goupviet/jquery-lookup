@@ -8,36 +8,50 @@
 	<script type="text/javascript" src="lookup.js"></script>
 </head>
 <body>
-	<input type="text" id="test" placeholder="Sláðu inn eitthvað" data-noresults="Nothing found!" />
-	<input type="text" id="test2" placeholder="Sláðu inn eitthvað" />
-	<textarea id="test3" placeholder="Sláðu inn eitthvað"></textarea>
+	<input type="text" id="lookup1" class="lookup" placeholder="Enter something" data-noresults="Nothing found!" />
+	<input type="text" id="lookup2" class="lookup" placeholder="Enter something" />
+	<textarea id="lookup3" class="lookup" placeholder="Enter something"></textarea>
 	<script type="text/javascript">
 	$(function() {
+		// Some example data
 		var data = [
-		  { "ID": 0, "First": "Gudjon", "Last": "Jonsson", "Age": 28 },
-		  { "ID": 1, "First": "Lovísa", "Last": "Júlíusdóttir", "Age": 30 },
-		  { "ID": 2, "First": "Kjartan", "Last": "Hjartarson", "Age": 25 },
-		  { "ID": 3, "First": "Guðmundur", "Last": "Ingvarsson", "Age": 31 },
-		  { "ID": 4, "First": "Vignir", "Last": "Sveinsson", "Age": 40 },
-		  { "ID": 5, "First": "Hafþór", "Last": "Húni", "Age": 33 }
+		  { "ID": 0, "First": "Ron", "Last": "Carpenter", "Age": 28 },
+		  { "ID": 1, "First": "Elroy", "Last": "Babcoke", "Age": 30 },
+		  { "ID": 2, "First": "Jake", "Last": "Bolton", "Age": 25 },
+		  { "ID": 3, "First": "Ainsley", "Last": "Beckett", "Age": 31 },
+		  { "ID": 4, "First": "Wyatt", "Last": "Goode", "Age": 40 },
+		  { "ID": 5, "First": "Shayne", "Last": "Hunt", "Age": 33 },
+		  { "ID": 6, "First": "Barnabas", "Last": "Hayward", "Age": 32 },
+		  { "ID": 7, "First": "Vaughn", "Last": "Deering", "Age": 24 },
+		  { "ID": 8, "First": "Royce", "Last": "Granger", "Age": 27 },
+		  { "ID": 9, "First": "Dene", "Last": "Keighley", "Age": 21 },
+		  { "ID": 10, "First": "Ilbert", "Last": "Queshire", "Age": 24 },
+		  { "ID": 11, "First": "Leith", "Last": "Aylmer", "Age": 22 },
+		  { "ID": 12, "First": "Abe", "Last": "Harlow", "Age": 20 },
+		  { "ID": 13, "First": "Ansel", "Last": "Wilkinson", "Age": 17 }
 		];
-
-		// Here is the magic...
 
 		// Callback to handle the selected row
 		var selectedCallback = function (obj) {
 			$(obj.element).val(obj.row.First);
 		};
 
+		// Set options
 		var options = {
+			// Hide first column
 			hideCol: [0],
+			// Must enter at least 1 character
 			minlength: 1,
+			// How many rows to display
 			rows: 10,
+			// Only search and highlight beginning of words
 			begin: false,
+			// Case sensitive search and highlight
 			casesens: false
 		};
 
-		// This will be a AJAX call to webserver
+		// Async data loder that handles returning data with a promise
+		// For $.ajax use: return $.ajax({...});
 		function dataLoader() {
 			var timer;
 			var dfd = new $.Deferred();
@@ -49,10 +63,10 @@
 			return dfd;
 		}
 
-		// Run the function
-		$('#test').lookup(["ID", "Fornafn", "Eftirnafn", "Aldur"], dataLoader, options, selectedCallback);
-		$('#test2').lookup(["ID", "Fornafn", "Eftirnafn", "Aldur"], dataLoader, options, selectedCallback);
-		$('#test3').lookup(["ID", "Fornafn", "Eftirnafn", "Aldur"], dataLoader, options, selectedCallback);
+		// Run the function on these elements
+		$('#lookup1').lookup(["ID", "First name", "Last name", "Age"], dataLoader, options, selectedCallback);
+		$('#lookup2').lookup(["ID", "First name", "Last name", "Age"], dataLoader, options, selectedCallback);
+		$('#lookup3').lookup(["ID", "First name", "Last name", "Age"], dataLoader, options, selectedCallback);
 	});
 	</script>
 </body>
