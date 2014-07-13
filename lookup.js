@@ -19,12 +19,12 @@ $(function () {
             var cache = [];
 			
             // Container
-            var container = $('<div style="display: inline-block; position: relative"/>');
+            var container = $('<div style="display: inline-block; position: relative; width: inherit"/>');
 			// Wrapper around input box
             var wrapper = mainContext.wrap(container);
 
             // Lookup table template
-            var template = '<table style="border-radius: 5px; width: 100%"><thead><tr>{{#col}}<td>{{.}}</td>{{/col}}</tr></thead><tbody>{{#rows}}<tr>{{#.}}<td>{{{.}}}</td>{{/.}}</tr>{{/rows}}</tbody></table>';
+            var template = '<table style="border-radius: 5px; width: inherit"><thead><tr>{{#col}}<td>{{.}}</td>{{/col}}</tr></thead><tbody>{{#rows}}<tr>{{#.}}<td>{{{.}}}</td>{{/.}}</tr>{{/rows}}</tbody></table>';
 
             // Whether lookup is open (active)
             var isOpen = false;
