@@ -24,7 +24,7 @@ $(function () {
             var wrapper = mainContext.wrap(container);
 
             // Lookup table template
-            var template = '<table style="position: absolute; border-radius: 5px; width: 100%"><thead><tr>{{#col}}<td>{{.}}</td>{{/col}}</tr></thead><tbody>{{#rows}}<tr>{{#.}}<td>{{{.}}}</td>{{/.}}</tr>{{/rows}}</tbody></table>';
+            var template = '<table style="border-radius: 5px; width: 100%"><thead><tr>{{#col}}<td>{{.}}</td>{{/col}}</tr></thead><tbody>{{#rows}}<tr>{{#.}}<td>{{{.}}}</td>{{/.}}</tr>{{/rows}}</tbody></table>';
 
             // Whether lookup is open (active)
             var isOpen = false;
