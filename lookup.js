@@ -1,36 +1,36 @@
 $(function () {
     $.fn.lookup = function (col, promise, opts, callback) {
-		// Do this for each lookup element
+        // Do this for each lookup element
         return this.each(function () {
             // Input box element
             var mainElement = $(this);
 
             // Default options
             var defaultOpts = {
-				// Do sorting (order and column (index))
-				// Disable: false
-				sort: {"order": "asc", "col": 0},
-				// Hide these columns (index)
+                // Do sorting (order and column (index))
+                // Disable: false
+                sort: {"order": "asc", "col": 0},
+                // Hide these columns (index)
                 hideCol: [],
-				// Don't start search until minlength reached
+                // Don't start search until minlength reached
                 minlength: 3,
-				// How many rows to display
+                // How many rows to display
                 rows: 10,
-				// Only search and highlight beginning of words
+                // Only search and highlight beginning of words
                 begin: false,
-				// Case sensitive search and highlight
+                // Case sensitive search and highlight
                 casesens: false
             };
 
-			// Extend options
+            // Extend options
             var options = $.extend({}, defaultOpts, opts);
-			
-			// Data cache
+            
+            // Data cache
             var cache = [];
-			
+            
             // Container
             var container = $('<div style="display: inline-block; position: relative; width: inherit"/>');
-			// Wrapper around input box
+            // Wrapper around input box
             var wrapper = mainElement.wrap(container);
 
             // Lookup table template
@@ -41,41 +41,41 @@ $(function () {
 
             // Utility object
             var util = {
-				// Check if an item is in an array
-				inArray: function(array, item) {
-					for(var i = 0; i < array.length; i++) {
-						if(array[i] === item) return true;
-					}
-					
-					return false;
-				},
-				// Text to be displayed when there are no results found
-				noResults: mainElement.data('noresults') === undefined ? 'No results found' : mainElement.data('noresults'),
-				// Handle closing lookup
+                // Check if an item is in an array
+                inArray: function(array, item) {
+                    for(var i = 0; i < array.length; i++) {
+                        if(array[i] === item) return true;
+                    }
+                    
+                    return false;
+                },
+                // Text to be displayed when there are no results found
+                noResults: mainElement.data('noresults') === undefined ? 'No results found' : mainElement.data('noresults'),
+                // Handle closing lookup
                 closeLookup: function () {
                     mainElement.next('div').slideUp('fast');
                 },
-				// Handles caching data
+                // Handles caching data
                 cacheData: function (d) {
                     cache = d;
                 },
-				// Handles destroying cache
+                // Handles destroying cache
                 destroyCache: function () {
                     cache = [];
                 },
-				// Handles sorting by a property
-				dynamicSort: function (property) {
-					var sortOrder = 1;
-					if(property[0] === "-") {
-						sortOrder = -1;
-						property = property.substr(1);
-					}
-					return function (a,b) {
-						var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
-						return result * sortOrder;
-					}
-				},
-				// Handles highlighting words in a line
+                // Handles sorting by a property
+                dynamicSort: function (property) {
+                    var sortOrder = 1;
+                    if(property[0] === "-") {
+                        sortOrder = -1;
+                        property = property.substr(1);
+                    }
+                    return function (a,b) {
+                        var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+                        return result * sortOrder;
+                    }
+                },
+                // Handles highlighting words in a line
                 highlightWords: function (line, word) {
                     var pattern = '(' + word + ')';
                     // Highlight only beginning
@@ -94,7 +94,7 @@ $(function () {
 
                     return newline;
                 },
-				// Checks if a line contains a word
+                // Checks if a line contains a word
                 findWord: function (line, word) {
                     if (options.begin) {
                         line = line.toString().substring(0, word.length);
@@ -108,89 +108,89 @@ $(function () {
                         return line.toString().toLowerCase().indexOf(word.toLowerCase()) !== -1;
                     }
                 },
-				// Handles loading data and displaying in the DOM
+                // Handles loading data and displaying in the DOM
                 loadData: function (data) {
-					var loadContext = this;
-				
-					// Remove element from DOM
+                    var loadContext = this;
+                
+                    // Remove element from DOM
                     mainElement.next('div').remove();
-					// Remove loading state
+                    // Remove loading state
                     mainElement.removeClass('loading');
-					
-					// How many rows we want to display
-					var iter = data.length;
-					if (options.rows !== 0) {
-						iter = options.rows;
-					}
-					
-					// Sort data array (if enabled)				
-					if(options.sort !== false) {
-						// If first element is an object, expect all elements to be
-						if(typeof(data[0]) === 'object') {
-							data.sort(util.dynamicSort(Object.keys(data[0])[options.sort.col]));
-						} else {
-							data.sort();
-						}
-						
-						// If not ascending, then it must be descending
-						if(options.sort.order !== 'asc' && options.sort.order !== 'ascending') {
-							data.reverse();
-						}
-					}
+                    
+                    // How many rows we want to display
+                    var iter = data.length;
+                    if (options.rows !== 0) {
+                        iter = options.rows;
+                    }
+                    
+                    // Sort data array (if enabled)             
+                    if(options.sort !== false) {
+                        // If first element is an object, expect all elements to be
+                        if(typeof(data[0]) === 'object') {
+                            data.sort(util.dynamicSort(Object.keys(data[0])[options.sort.col]));
+                        } else {
+                            data.sort();
+                        }
+                        
+                        // If not ascending, then it must be descending
+                        if(options.sort.order !== 'asc' && options.sort.order !== 'ascending') {
+                            data.reverse();
+                        }
+                    }
 
                     // New data array
                     var dataArray = [];
-					// Keep track of old indexes for referral when item is selected
+                    // Keep track of old indexes for referral when item is selected
                     var oldIndexArray = [];
-					// Go through returned data array
+                    // Go through returned data array
                     for (var i = 0; i < data.length; i++) {
-						if(data[i] === undefined) continue;
-						
-						// Stores items for each row
+                        if(data[i] === undefined) continue;
+                        
+                        // Stores items for each row
                         var tmp = [];
                         var addRow = false;
-						
-						// If the item is an object, we have to loop through each property
-						if(typeof(data[i]) === 'object') {
-							// Go through each property in object
-							var j = 0;
-							for (var prop in data[i]) {							
-								// Check if the value contains the input text
-								// And don't add values that are found in columns that are hidden
-								if (this.findWord(data[i][prop], mainElement.val()) && !util.inArray(options.hideCol, j)) {
-									addRow = true;
-								}
-								
-								// Highlight words in input text
-								var tmpText = this.highlightWords(data[i][prop], mainElement.val());
-								tmp.push(tmpText);
-								
-								j++;
-							}
-						// The item is not an object
-						} else {
-							// Check if the value contains the input text
-							// And don't add values that are found in columns that are hidden
-							if (this.findWord(data[i], mainElement.val()) && !util.inArray(options.hideCol, i)) {
-								addRow = true;
-							}
-							
-							// Highlight words in input text
-							var tmpText = this.highlightWords(data[i], mainElement.val());					
-							tmp.push(tmpText);
-						}
+                        
+                        // If the item is an object, we have to loop through each property
+                        if(typeof(data[i]) === 'object') {
+                            // Go through each property in object
+                            var j = 0;
+                            for (var prop in data[i]) {                         
+                                // Check if the value contains the input text
+                                // And don't add values that are found in columns that are hidden
+                                if (this.findWord(data[i][prop], mainElement.val()) && !util.inArray(options.hideCol, j)) {
+                                    addRow = true;
+                                }
+                                
+                                // Highlight words in input text
+                                var tmpText = this.highlightWords(data[i][prop], mainElement.val());
+                                tmp.push(tmpText);
+                                
+                                j++;
+                            }
+                        // The item is not an object
+                        } else {
+                            // Check if the value contains the input text
+                            // And don't add values that are found in columns that are hidden
+                            if (this.findWord(data[i], mainElement.val()) && !util.inArray(options.hideCol, i)) {
+                                addRow = true;
+                            }
+                            
+                            // Highlight words in input text
+                            var tmpText = this.highlightWords(data[i], mainElement.val());                  
+                            tmp.push(tmpText);
+                        }
 
-						// If all conditions are met for adding the row to the new data array
+                        // If all conditions are met for adding the row to the new data array
                         if (addRow) {
                             dataArray.push(tmp);
-							
-							// Keep track of indexes in original data array
+                            
+                            // Keep track of indexes in original data array
                             oldIndexArray.push(i);
                         }
                     }
-					
-					dataArray.splice(iter);
-					oldIndexArray.splice(iter);
+                    
+                    dataArray.splice(iter);
+                    oldIndexArray.splice(iter);
 
                     // Render the table
                     var table = Mustache.render(template, {
@@ -198,55 +198,55 @@ $(function () {
                         "rows": dataArray
                     });
 
-					// Create a new div containing our table
+                    // Create a new div containing our table
                     var newDiv = $('<div style="position: absolute; z-index: 1; width: 100%"/>');
                     newDiv.append(table);
                     newDiv.appendTo(wrapper.parent('div')).hide();
 
-					// If lookup is open, we don't want animation
+                    // If lookup is open, we don't want animation
                     if (isOpen) {
                         newDiv.show();
                     }
-					// Lookup is not open, animate!
+                    // Lookup is not open, animate!
                     else {
                         newDiv.slideDown('fast');
                     }
 
-					// Mark the lookup as open
+                    // Mark the lookup as open
                     isOpen = true;
 
                     // Hide specific columns
                     for (var j = 0; j < options.hideCol.length; j++) {
-						// Don't hide first column if no results are found
-						if(j == 0 && dataArray.length == 0) continue;
-						
+                        // Don't hide first column if no results are found
+                        if(j == 0 && dataArray.length == 0) continue;
+                        
                         var idx = (options.hideCol[j] + 1);
                         wrapper.parent('div').find('td:nth-of-type(' + idx + '),th:nth-of-type(' + idx + ')').css('display', 'none');
                     }
 
                     // Hover over a row
                     wrapper.parent('div').find('table tbody tr').hover(
-						// Hover active
-						function () {
-							var selfRow = $(this);
-							selfRow.css('cursor', 'pointer');
-							selfRow.addClass('hover');
-						},
-						// Hover inactive
-						function () {
-							var selfRow = $(this);
-							selfRow.css('cursor', 'initial');
-							selfRow.removeClass('hover');
-						}
-					);
+                        // Hover active
+                        function () {
+                            var selfRow = $(this);
+                            selfRow.css('cursor', 'pointer');
+                            selfRow.addClass('hover');
+                        },
+                        // Hover inactive
+                        function () {
+                            var selfRow = $(this);
+                            selfRow.css('cursor', 'initial');
+                            selfRow.removeClass('hover');
+                        }
+                    );
 
                     // Event handler for click on a row in the lookup
                     wrapper.parent('div').find('table tbody tr').click(function () {
                         var selfRow = $(this);
-						// Callback with original index, the input element and the selected row
+                        // Callback with original index, the input element and the selected row
                         callback({ "index": oldIndexArray[selfRow.index()], "element": mainElement, "row": data[oldIndexArray[selfRow.index()]] });
-						
-						// Close lookup
+                        
+                        // Close lookup
                         loadContext.closeLookup();
                         isOpen = false;
                     });
@@ -262,20 +262,20 @@ $(function () {
 
                 // Check if minimum length is reached
                 if (mainElement.val().length >= options.minlength) {
-					// Add loading state
+                    // Add loading state
                     mainElement.addClass('loading');
                     // If there is no data in cache
                     if (cache.length === 0) {
-						// Async data loader that loads data on callback (e.g. with AJAX)
+                        // Async data loader that loads data on callback (e.g. with AJAX)
                         promise().then(function (data) {
                             cache = data;
                             util.loadData(cache);
                         });
-					// Data is in cache, load it
+                    // Data is in cache, load it
                     } else {
                         util.loadData(cache);
                     }
-				// Minimum input length not reached
+                // Minimum input length not reached
                 } else {
                     util.closeLookup();
                     util.destroyCache();
@@ -283,7 +283,7 @@ $(function () {
                 }
             });
 
-			// Close look up when mouse leaves the container
+            // Close look up when mouse leaves the container
             wrapper.parent('div').mouseleave(function () {
                 util.closeLookup();
                 isOpen = false;
