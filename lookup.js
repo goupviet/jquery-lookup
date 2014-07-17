@@ -34,7 +34,7 @@ $(function () {
             var wrapper = mainElement.wrap(container);
 
             // Lookup table template
-            var template = '<table style="border-radius: 5px; width: inherit"><thead><tr>{{#col}}<td>{{.}}</td>{{/col}}</tr></thead><tbody>{{#rows}}<tr>{{#.}}<td>{{{.}}}</td>{{/.}}</tr>{{/rows}}</tbody></table>';
+            var template = '<table style="border-radius: 5px; width: inherit"><thead><tr>{{#col}}<td>{{.}}</td>{{/col}}</tr></thead><tbody>{{#rows}}<tr tabindex="0" style="outline: 0">{{#.}}<td>{{{.}}}</td>{{/.}}</tr>{{/rows}}</tbody></table>';
 
             // Whether lookup is open (active)
             var isOpen = false;
@@ -225,23 +225,65 @@ $(function () {
                     }
 
                     // Hover over a row
-                    wrapper.parent('div').find('table tbody tr').hover(
+                    wrapper.parent('div').find('table tbody tr').on({
                         // Hover active
-                        function () {
+                        mouseenter: function () {
                             var selfRow = $(this);
                             selfRow.css('cursor', 'pointer');
                             selfRow.addClass('hover');
                         },
                         // Hover inactive
-                        function () {
+                        mouseleave: function () {
                             var selfRow = $(this);
                             selfRow.css('cursor', 'initial');
                             selfRow.removeClass('hover');
+                        },
+                        // Focus on row, activate hover
+                        focus: function() {
+                            var selfRow = $(this);
+                            selfRow.css('cursor', 'pointer');
+                            selfRow.addClass('hover');
+                        },
+                        // Blur from row, inactivate hover
+                        blur: function () {
+                            var selfRow = $(this);
+                            selfRow.css('cursor', 'initial');
+                            selfRow.removeClass('hover');
+                        },
+                        // Navigation in rows
+                        keydown: function (e) {
+                            // Up key
+                            if(e.which == 38) {
+                                var prevRow = $(this).prev('tr');
+                                if(prevRow.length > 0) {
+                                    $(this).removeClass('hover');
+                                    prevRow.focus();
+                                    prevRow.addClass('hover');
+                                } else {
+                                    mainElement.focus();
+                                }
+                            }
+                            // Down key
+                            else if(e.which == 40) {
+                                var nextRow = $(this).next('tr');
+                                if(nextRow.length > 0) {
+                                    $(this).removeClass('hover');
+                                    nextRow.focus();
+                                    nextRow.addClass('hover');
+                                }
+                            }
+                            // Tab key, do nothing
+                            else if(e.which == 9) {
+                                e.preventDefault();
+                            }
                         }
-                    );
+                    });
 
                     // Event handler for click on a row in the lookup
-                    wrapper.parent('div').find('table tbody tr').click(function () {
+                    wrapper.parent('div').find('table tbody tr').on('click keydown', function (e) {
+                        // If it's keydown but not the enter or tab key, don't do anything
+                        if(e.type === 'keydown' && e.which != 13 && e.which != 9) return;
+
                         var selfRow = $(this);
                         // Callback with original index, the input element and the selected row
                         callback({ "index": oldIndexArray[selfRow.index()], "element": mainElement, "row": data[oldIndexArray[selfRow.index()]] });
@@ -283,7 +325,15 @@ $(function () {
                 }
             });
 
-            // Close look up when mouse leaves the container
+            // If it's key down and the lookup table is open
+            // We focus the first table row
+            mainElement.on('keydown', function(e) {
+                if(e.which == 40 && isOpen) {
+                    wrapper.parent('div').find('table tbody tr:first').focus();
+                }
+            });
+
+            // Close lookup when mouse leaves the container
             wrapper.parent('div').mouseleave(function () {
                 util.closeLookup();
                 isOpen = false;
