@@ -284,6 +284,10 @@ You can customize everything with CSS selectors.
 
 # Changelog
 
+## v0.2
+
+- Added the ability to use keyboard up/down keys for navigation in lookup menu
+
 ## v0.1
 
 - Current version
